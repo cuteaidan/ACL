@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {
+      "domain_suffix": [
+        "ip.sb",
+        "baidu.com",
+      ]
+    },
+  ],
+  "version": 2
+}
