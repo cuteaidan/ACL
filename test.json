@@ -1,0 +1,19 @@
+{
+  "route": {
+    "rules": [
+      {
+        "type": "field",
+        "domain": ["im.qq.com"],
+        "outbound": "redirect-to-baidu"
+      }
+    ],
+    "outbounds": [
+      {
+        "type": "http",
+        "tag": "redirect-to-baidu",
+        "server": "www.baidu.com",
+        "port": 80
+      }
+    ]
+  }
+}
