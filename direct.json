@@ -2,7 +2,9 @@
   "rules": [
     {
       "domain_suffix": [
-        "ip111.cn"
+        "ip111.cn",
+        "baidu.com",
+        "deepseek.com"
       ]
     }
   ],
