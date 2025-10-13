@@ -2,8 +2,7 @@
   "rules": [
     {
       "domain_suffix": [
-        "ip.sb",
-        "baidu.com"
+        "ip.sb"
       ]
     }
   ],
