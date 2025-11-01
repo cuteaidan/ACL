@@ -1,0 +1,46 @@
+name: Build Caddy (FreeBSD + ForwardProxy)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-caddy:
+    runs-on: ubuntu-latest
+    name: Build Caddy with forwardproxy
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+
+      - name: Install xcaddy
+        run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+      - name: Build FreeBSD binary (amd64)
+        run: |
+          mkdir -p build
+          # 设置交叉编译目标
+          export GOOS=freebsd
+          export GOARCH=amd64
+          export CGO_ENABLED=0
+          # 编译带 forwardproxy 的 Caddy
+          ~/go/bin/xcaddy build v2.8.4 \
+            --with github.com/caddyserver/forwardproxy@latest \
+            --output ./build/caddy-freebsd-amd64
+
+      - name: Verify binary
+        run: |
+          file ./build/caddy-freebsd-amd64
+          ls -lh ./build/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: caddy-freebsd-amd64
+          path: build/caddy-freebsd-amd64
