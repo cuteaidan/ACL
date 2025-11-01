@@ -1,0 +1,34 @@
+name: Build BusyBox for FreeBSD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build BusyBox (FreeBSD 14)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build BusyBox inside FreeBSD VM
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: "14.1" # 使用 FreeBSD 14.x 版本
+          usesh: true
+          prepare: |
+            pkg install -y git gmake clang
+          run: |
+            set -e
+            git clone https://git.busybox.net/busybox
+            cd busybox
+            make defconfig
+            # 构建静态版，防止依赖缺失
+            make CONFIG_STATIC=y CC=clang -j4
+            strip busybox
+            tar czf /tmp/busybox-freebsd-amd64.tar.gz busybox
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: busybox-freebsd-amd64
+          path: /tmp/busybox-freebsd-amd64.tar.gz
